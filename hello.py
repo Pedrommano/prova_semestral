@@ -44,6 +44,13 @@ class User(db.Model):
         return '<User %r>' % self.username
 
 
+# Create a form class for discipline data
+class DisciplineForm(FlaskForm):
+    name = StringField('Disciplina', validators=[DataRequired()])
+    semester = StringField('Semestre', validators=[DataRequired()])
+    submit = SubmitField('Cadastrar')
+
+
 class NameForm(FlaskForm):
     name = StringField('Cadastro Novo Aluno:', validators=[DataRequired()])
     role = SelectField('Disciplina Assosciada:', choices=[('DSWA5'), ('GPSA5'), ('IHCA5'), ('SODA5'), ('PJIA5'), ('TCOA5')])
@@ -72,6 +79,25 @@ def home():
     now = datetime.now(brasil_tz)
     current_time = now.strftime("%Y-%M-%d %H:%M:%S")
     return render_template('home.html', current_time=current_time)
+
+
+@app.route('/disciplinas', methods=['GET', 'POST'])
+def disciplinas():
+    form = DisciplineForm()
+    if form.validate_on_submit():
+        # Process form data
+        new_discipline = Discipline(name=form.name.data, semester=form.semester.data)
+        db.session.add(new_discipline)
+        db.session.commit()
+        flash('Disciplina cadastrada com sucesso!')
+        return redirect(url_for('disciplinas'))  # Redirect to prevent form resubmission
+
+    # Get all disciplines from the database (assuming you have a query method)
+    disciplines = Discipline.query.all()
+
+    return render_template('cadastroDeDisciplina.html', form=form, disciplines=disciplines)
+
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
