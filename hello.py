@@ -23,38 +23,24 @@ moment = Moment(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+# Define the disciplines table schema
+class Discipline(db.Model):
+    __tablename__ = 'disciplines'  # Ensure this matches the database table name
 
-class Role(db.Model):
-    __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    users = db.relationship('User', backref='role', lazy='dynamic')
+    name = db.Column(db.String(80), nullable=False)  # Adjust name length as needed
+    semester = db.Column(db.String(20))  # Adjust semester field details as needed
 
-    def __repr__(self):
-        return '<Role %r>' % self.name
-
-
-class User(db.Model):
-    __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(64), unique=True, index=True)
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-
-    def __repr__(self):
-        return '<User %r>' % self.username
-
-
+# Create the disciplines table (if it doesn't exist)
+with app.app_context():
+    db.create_all()
+    
 # Create a form class for discipline data
 class DisciplineForm(FlaskForm):
     name = StringField('Disciplina', validators=[DataRequired()])
     semester = StringField('Semestre', validators=[DataRequired()])
     submit = SubmitField('Cadastrar')
 
-
-class NameForm(FlaskForm):
-    name = StringField('Cadastro Novo Aluno:', validators=[DataRequired()])
-    role = SelectField('Disciplina Assosciada:', choices=[('DSWA5'), ('GPSA5'), ('IHCA5'), ('SODA5'), ('PJIA5'), ('TCOA5')])
-    submit = SubmitField('Submit')
 
 
 @app.shell_context_processor
@@ -99,26 +85,4 @@ def disciplinas():
 
 
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    form = NameForm()
-    user_all = User.query.all();
-    role_all = Role.query.all();
-    print(user_all);
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.name.data).first()
-        if user is None:
-            user_role = Role.query.filter_by(name=form.role.data).first();
-            user = User(username=form.name.data, role=user_role);
-            db.session.add(user)
-            db.session.commit()
-            session['known'] = False
-            flash('Estudante cadastrado com sucesso!', 'success')
-        else:
-            flash('Estudante já cadastrado na base de dados!', 'error')
-            session['known'] = True
-        session['name'] = form.name.data
-        return redirect(url_for('index'))
-    return render_template('index.html', form=form, name=session.get('name'),
-                           known=session.get('known', False),
-                           user_all=user_all, role_all = role_all);
+    
