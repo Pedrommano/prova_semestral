@@ -75,7 +75,7 @@ def disciplinas():
     # Get all disciplines from the database (assuming you have a query method)
     disciplines = Discipline.query.all()
 
-    return render_template('cadastroDeDisciplina.html', form=form, disciplines=disciplines)
+    return render_template('templates/cadastroDeDisciplina.html', form=form, disciplines=disciplines)
 
 
 
