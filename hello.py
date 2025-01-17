@@ -34,14 +34,7 @@ with app.app_context():
 
 class DisciplineForm(FlaskForm):
     name = StringField('Disciplina', validators=[DataRequired()])
-    semester = RadioField('Semestre', choices=[
-        ('1º semestre', '1º semestre'), 
-        ('2º semestre', '2º semestre'), 
-        ('3º semestre', '3º semestre'), 
-        ('4º semestre', '4º semestre'), 
-        ('5º semestre', '5º semestre'), 
-        ('6º semestre', '6º semestre')
-    ], validators=[DataRequired()])
+    semester = StringField('Semestre', validators=[DataRequired()])
     submit = SubmitField('Cadastrar')
 
 @app.route('/')
