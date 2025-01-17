@@ -3,7 +3,7 @@ from flask import Flask, render_template, session, redirect, url_for, flash
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, SubmitField
+from wtforms import StringField, RadioField, SubmitField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -12,10 +12,9 @@ from pytz import timezone
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-app = Flask(__name__, template_folder='templates')  # Configurando a pasta 'templates'
+app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = 'hard to guess string'
-app.config['SQLALCHEMY_DATABASE_URI'] =\
-    'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 bootstrap = Bootstrap(app)
@@ -23,39 +22,43 @@ moment = Moment(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-# Define the disciplines table schema
 class Discipline(db.Model):
-    __tablename__ = 'disciplines'  # Ensure this matches the database table name
+    __tablename__ = 'disciplines'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)  # Adjust name length as needed
-    semester = db.Column(db.String(20))  # Adjust semester field details as needed
+    name = db.Column(db.String(80), nullable=False)
+    semester = db.Column(db.String(20))
 
-# Create the disciplines table (if it doesn't exist)
 with app.app_context():
     db.create_all()
 
-# Create a form class for discipline data
 class DisciplineForm(FlaskForm):
     name = StringField('Disciplina', validators=[DataRequired()])
-    semester = StringField('Semestre', validators=[DataRequired()])
+    semester = RadioField('Semestre', choices=[
+        ('1º semestre', '1º semestre'), 
+        ('2º semestre', '2º semestre'), 
+        ('3º semestre', '3º semestre'), 
+        ('4º semestre', '4º semestre'), 
+        ('5º semestre', '5º semestre'), 
+        ('6º semestre', '6º semestre')
+    ], validators=[DataRequired()])
     submit = SubmitField('Cadastrar')
 
+@app.route('/')
+def index():
+    return redirect(url_for('disciplinas'))
 
 @app.route('/disciplinas', methods=['GET', 'POST'])
 def disciplinas():
     form = DisciplineForm()
     if form.validate_on_submit():
-        # Process form data
         new_discipline = Discipline(name=form.name.data, semester=form.semester.data)
         db.session.add(new_discipline)
         db.session.commit()
         flash('Disciplina cadastrada com sucesso!')
-        return redirect(url_for('disciplinas'))  # Redirect to prevent form resubmission
+        return redirect(url_for('disciplinas'))
 
-    # Get all disciplines from the database (assuming you have a query method)
     disciplines = Discipline.query.all()
-
     return render_template('cadastro.html', form=form, disciplines=disciplines)
 
 @app.errorhandler(404)
@@ -76,3 +79,6 @@ def home():
     now = datetime.now(brasil_tz)
     current_time = now.strftime("%Y-%M-%d %H:%M:%S")
     return render_template('home.html', current_time=current_time)
+
+if __name__ == '__main__':
+    app.run(debug=True)
