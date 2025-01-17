@@ -39,7 +39,7 @@ class DisciplineForm(FlaskForm):
 
 @app.route('/')
 def index():
-    return redirect(url_for('disciplinas'))
+    return redirect(url_for('home'))
 
 @app.route('/disciplinas', methods=['GET', 'POST'])
 def disciplinas():
