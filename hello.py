@@ -37,9 +37,6 @@ class DisciplineForm(FlaskForm):
     semester = StringField('Semestre', validators=[DataRequired()])
     submit = SubmitField('Cadastrar')
 
-@app.route('/')
-def index():
-    return redirect(url_for('home'))
 
 @app.route('/disciplinas', methods=['GET', 'POST'])
 def disciplinas():
