@@ -34,12 +34,33 @@ class Discipline(db.Model):
 # Create the disciplines table (if it doesn't exist)
 with app.app_context():
     db.create_all()
-    
+
 # Create a form class for discipline data
 class DisciplineForm(FlaskForm):
     name = StringField('Disciplina', validators=[DataRequired()])
     semester = StringField('Semestre', validators=[DataRequired()])
     submit = SubmitField('Cadastrar')
+
+@app.route('/')
+def index():
+    # Consider displaying a welcome message or list of features here
+    return render_template('rotaPrincipal.html')
+
+@app.route('/disciplinas', methods=['GET', 'POST'])
+def disciplinas():
+    form = DisciplineForm()
+    if form.validate_on_submit():
+        # Process form data
+        new_discipline = Discipline(name=form.name.data, semester=form.semester.data)
+        db.session.add(new_discipline)
+        db.session.commit()
+        flash('Disciplina cadastrada com sucesso!')
+        return redirect(url_for('disciplinas'))  # Redirect to prevent form resubmission
+
+    # Get all disciplines from the database (assuming you have a query method)
+    disciplines = Discipline.query.all()
+
+    return render_template('cadastroDeDisciplina.html', form=form, disciplines=disciplines)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -61,21 +82,7 @@ def home():
     return render_template('home.html', current_time=current_time)
 
 
-@app.route('/disciplinas', methods=['GET', 'POST'])
-def disciplinas():
-    form = DisciplineForm()
-    if form.validate_on_submit():
-        # Process form data
-        new_discipline = Discipline(name=form.name.data, semester=form.semester.data)
-        db.session.add(new_discipline)
-        db.session.commit()
-        flash('Disciplina cadastrada com sucesso!')
-        return redirect(url_for('disciplinas'))  # Redirect to prevent form resubmission
 
-    # Get all disciplines from the database (assuming you have a query method)
-    disciplines = Discipline.query.all()
-
-    return render_template('cadastroDeDisciplina.html', form=form, disciplines=disciplines)
 
 
 
