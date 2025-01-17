@@ -1,100 +1,103 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
+<html>
+  <head>
+    <title>Avaliação semestral</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avaliação Semestral</title>
     <!-- Bootstrap -->
     <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
-</head>
-<body>
-    <div class="navbar navbar-inverse" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">Avaliação Semestral</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="/professores">Cadastro de Professores</a></li>
-                    <li><a href="/disciplinas">Cadastro de Disciplinas</a></li>
-                    <li><a href="/alunos">Cadastro de Alunos</a></li>
-                </ul>
-            </div>
+  </head>
+  <body>
+      
+  <div class="navbar navbar-inverse" role="navigation">
+      <div class="container">
+          <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="/">Avaliação semestral</a>
+          </div>
+          <div class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                  <li><a href="/professores">Cadastro de Professores</a></li>
+                  <li><a href="/disciplinas">Cadastro de Disciplinas</a></li>
+                  <li><a href="/alunos">Cadastro de Alunos</a></li>
+                  <li><a href="/cursos">Cadastro de Cursos</a></li>
+                  <li><a href="/ocorrencias">Cadastro de Ocorrencias</a></li>
+              </ul>
+          </div>
+      </div>
+  </div>
+
+  <div class="container">
+  
+  <form action="" method="post" class="form" role="form">
+    {{ form.hidden_tag() }}
+    <div class="form-group required">
+        <label class="control-label" for="name">Cadastre a nova disciplina e o semestre associado:</label>
+        {{ form.name(class="form-control") }}
+    </div>
+    <div class="form-group">
+        <label>{{ form.semester.label }}</label>
+        <div class="radio">
+                <label>
+              <input id="semester-0" name="semester" type="radio" value="1º semestre"> 1º semestre
+            </label>
+          </div>
+             <label>
+            <input id="semester-1" name="semester" type="radio" value="2º semestre"> 2º semestre
+          </label>
+        </div>
+      <div class="radio">
+          <label>
+            <input id="semester-2" name="semester" type="radio" value="3º semestre"> 3º semestre
+          </label>
+        </div>
+      <div class="radio">
+          <label>
+            <input id="semester-3" name="semester" type="radio" value="4º semestre"> 4º semestre
+          </label>
+        </div>
+      <div class="radio">
+          <label>
+            <input id="semester-4" name="semester" type="radio" value="5º semestre"> 5º semestre
+          </label>
+        </div>
+      <div class="radio">
+          <label>
+            <input id="semester-5" name="semester" type="radio" value="6º semestre"> 6º semestre
+          </label>
         </div>
     </div>
-
-    <div class="container">
-        <form action="/disciplinas" method="post" class="form" role="form">
-            <div class="form-group required">
-                <label class="control-label" for="name">Cadastre a nova disciplina e o semestre associado:</label>
-                <input class="form-control" id="name" name="name" required="" type="text" value="">
-            </div>
-
-            <div class="form-group">
-                <label>Semestre</label>
-                <div class="radio">
-                    <label>
-                        <input id="semester-0" name="semester" type="radio" value="1º semestre"> 1º semestre
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input id="semester-1" name="semester" type="radio" value="2º semestre"> 2º semestre
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input id="semester-2" name="semester" type="radio" value="3º semestre"> 3º semestre
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input id="semester-3" name="semester" type="radio" value="4º semestre"> 4º semestre
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input id="semester-4" name="semester" type="radio" value="5º semestre"> 5º semestre
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                        <input id="semester-5" name="semester" type="radio" value="6º semestre"> 6º semestre
-                    </label>
-                </div>
-            </div>
-
-            <input class="btn btn-default" id="submit" name="submit" type="submit" value="Cadastrar">
-        </form>
-
-        <h2>Relação de disciplinas cadastradas</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Disciplina</th>
-                    <th>Semestre</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for discipline in disciplines %}
-                    <tr>
-                        <td>{{ discipline.name }}</td>
-                        <td>{{ discipline.semester }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-default") }}
     </div>
+  </form>
+  
+  <h2>Relação de disciplinas cadastradas</h2>
+  <table class="table">
+      <thead>
+          <tr>
+              <th>Disciplina</th>
+              <th>Semestre</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for discipline in disciplines %}
+              <tr>
+                  <td>{{ discipline.name }}</td>
+                  <td>{{ discipline.semester }}</td>
+              </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+  </div>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</body>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  </body>
 </html>
