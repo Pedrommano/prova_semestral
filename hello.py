@@ -12,7 +12,7 @@ from pytz import timezone
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')  # Configurando a pasta 'templates'
 app.config['SECRET_KEY'] = 'hard to guess string'
 app.config['SQLALCHEMY_DATABASE_URI'] =\
     'sqlite:///' + os.path.join(basedir, 'data.sqlite')
@@ -68,7 +68,7 @@ def internal_server_error(e):
 
 @app.route('/indisponivel', methods=['GET', 'POST'])
 def indisponivel():
-     return render_template('indisponivel.html')
+    return render_template('indisponivel.html')
 
 @app.route('/home', methods=['GET', 'POST'])
 def home():
@@ -76,11 +76,3 @@ def home():
     now = datetime.now(brasil_tz)
     current_time = now.strftime("%Y-%M-%d %H:%M:%S")
     return render_template('home.html', current_time=current_time)
-
-
-
-
-
-
-
-    
