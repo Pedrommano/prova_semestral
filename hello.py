@@ -41,10 +41,6 @@ class DisciplineForm(FlaskForm):
     semester = StringField('Semestre', validators=[DataRequired()])
     submit = SubmitField('Cadastrar')
 
-@app.route('/')
-def index():
-    # Consider displaying a welcome message or list of features here
-    return render_template('rotaPrincipal.html')
 
 @app.route('/disciplinas', methods=['GET', 'POST'])
 def disciplinas():
